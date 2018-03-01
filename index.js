@@ -8,7 +8,7 @@ const paths = {
   e: 'e_high_bonus.in'
 }
 
-let data = fs.readFileSync(paths.e, 'utf8');
+let data = fs.readFileSync(paths.a, 'utf8');
 
 class Vehicle {
   constructor(x, y, time) {
@@ -94,16 +94,14 @@ let tempLength;
 while(rides.length !== 0) {
   //console.log(rides.length)
   tempLength = rides.length;
-  rides.sort((a, b) => {
-    return a.ear > b.ear;
-  })
   vehicles.forEach(veh => {
     if (rides.length === 0) {
       return;
     }
-    if (veh.time <= rides[0].last + veh.stepsTo(rides[0].a, rides[0].b)) {
-      veh.makeRide(rides[0]);
-      rides.splice(0, 1);
+    let index = calc(rides, veh)
+    if (index) {
+      veh.makeRide(rides[index]);
+      rides.splice(index, 1);
     }
   })
   if (tempLength == rides.length) {
@@ -120,4 +118,20 @@ vehicles.forEach(veh => {
 console.log(output)
 console.log('points', points)
 
-fs.writeFileSync('e.out', output);
+//fs.writeFileSync('b.out', output);
+
+function calc(array, veh) {
+  let best = 0 //array[0].distance / (array[0].distance + veh.stepsTo(array[0].a, array[0].b));
+  let index = null;
+  for (let i = 0; i < array.length; i++) {
+    if (veh.time > rides[i].last + veh.stepsTo(rides[i].a, rides[i].b)) {
+      continue
+    }
+    let temp = array[i].distance / (array[i].distance + veh.stepsTo(array[i].x, array[i].y));
+    if (temp > best) {
+      best = temp;
+      index = i;
+    }
+  }
+  return index;
+}
