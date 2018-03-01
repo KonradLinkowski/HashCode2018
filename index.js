@@ -8,7 +8,7 @@ const paths = {
   e: 'e_high_bonus.in'
 }
 
-let data = fs.readFileSync(paths.b, 'utf8');
+let data = fs.readFileSync(paths.e, 'utf8');
 
 class Vehicle {
   constructor(x, y, time) {
@@ -70,12 +70,12 @@ for (let i = 0; i < data.length; i++) {
   data[i] = data[i].split(' ')
 }
 
-const R = data[0][0]
-const C = data[0][1]
-const F = data[0][2]
-const N = data[0][3]
-const B = data[0][4]
-const T = data[0][5]
+const R = parseInt(data[0][0])
+const C = parseInt(data[0][1])
+const F = parseInt(data[0][2])
+const N = parseInt(data[0][3])
+const B = parseInt(data[0][4])
+const T = parseInt(data[0][5])
 
 let vehicles = [];
 
@@ -90,8 +90,10 @@ for (let i = 0; i < N; i++) {
 }
 
 console.log(rides)
+let tempLength;
 while(rides.length !== 0) {
   //console.log(rides.length)
+  tempLength = rides.length;
   rides.sort((a, b) => {
     return a.ear > b.ear;
   })
@@ -104,12 +106,18 @@ while(rides.length !== 0) {
       rides.splice(0, 1);
     }
   })
+  if (tempLength == rides.length) {
+    break;
+  }
 }
 
 let points = 0;
+let output = '';
 vehicles.forEach(veh => {
   points += parseInt(veh.points);
-  //console.log(veh)
-  console.log(veh.toString())
+  output += veh.toString() + '\n'
 })
+console.log(output)
 console.log('points', points)
+
+fs.writeFileSync('e.out', output);
