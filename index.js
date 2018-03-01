@@ -29,9 +29,9 @@ class Vehicle {
   }
   // weź pasażera i zawieź go na miejsce, ustaw czas
   makeRide(ride) {
+    this.time += this.stepsTo(ride.a, ride.b) + ride.distance;
     this.x = ride.x;
     this.y = ride.y;
-    this.time += this.stepsTo(a, b);
     this.rides.push(ride.id)
   }
   // output koncowy
@@ -91,12 +91,13 @@ while(rides.length !== 0) {
       return;
     }
     if (veh.time <= veh.stepsTo(rides[0].a, rides[0].b)) {
-      veh.goTo(rides[0]);
+      veh.makeRide(rides[0]);
       rides.splice(0, 1);
     }
   })
 }
 
 vehicles.forEach(veh => {
-  console.log(veh.toString())
+  console.log(veh)
+  //console.log(veh.toString())
 })
