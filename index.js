@@ -8,7 +8,7 @@ const paths = {
   e: 'e_high_bonus.in'
 }
 
-let data = fs.readFileSync(paths.a, 'utf8');
+let data = fs.readFileSync(paths.b, 'utf8');
 
 class Vehicle {
   constructor(x, y, time) {
@@ -33,7 +33,8 @@ class Vehicle {
     this.time += this.stepsTo(ride.a, ride.b);
     //console.log(this.time, ride.ear)
     if (this.time <= ride.ear) {
-      //console.log('bonus')
+      //console.log('bonus', ride.id)
+      bonus++;
       this.points += B;
     }
     this.time += ride.distance;
@@ -51,7 +52,7 @@ class Vehicle {
     return out.join(' ');
   }
 }
-
+let bonus = 0;
 class Ride {
   constructor(id, a, b, x, y, ear, last) {
     this.id = parseInt(id);
@@ -99,7 +100,7 @@ while(rides.length !== 0) {
       return;
     }
     let index = calc(rides, veh)
-    if (index) {
+    if (index !== null) {
       veh.makeRide(rides[index]);
       rides.splice(index, 1);
     }
@@ -108,7 +109,6 @@ while(rides.length !== 0) {
     break;
   }
 }
-
 let points = 0;
 let output = '';
 vehicles.forEach(veh => {
@@ -117,21 +117,24 @@ vehicles.forEach(veh => {
 })
 console.log(output)
 console.log('points', points)
-
-//fs.writeFileSync('b.out', output);
+console.log('nonnnnn', bonus)
+fs.writeFileSync('e.out', output);
 
 function calc(array, veh) {
   let best = 0 //array[0].distance / (array[0].distance + veh.stepsTo(array[0].a, array[0].b));
   let index = null;
   for (let i = 0; i < array.length; i++) {
-    if (veh.time > rides[i].last + veh.stepsTo(rides[i].a, rides[i].b)) {
+    if (veh.time > rides[i].last + veh.stepsTo(rides[i].x, rides[i].y)) {
       continue
     }
     let temp = array[i].distance / (array[i].distance + veh.stepsTo(array[i].x, array[i].y));
+    //console.log(veh, i, temp, best)
     if (temp > best) {
+      //console.log('przepis')
       best = temp;
       index = i;
     }
   }
+  //console.log('index', index)
   return index;
 }
