@@ -8,13 +8,14 @@ const paths = {
   e: 'e_high_bonus.in'
 }
 
-let data = fs.readFileSync(paths.a, 'utf8');
+let data = fs.readFileSync(paths.b, 'utf8');
 
 class Vehicle {
   constructor(x, y, time) {
     this.x = parseInt(x);
     this.y = parseInt(y);
     this.time = parseInt(time);
+    this.points = 0;
     this.rides = [];
   }
   // odległość do a i b
@@ -29,7 +30,14 @@ class Vehicle {
   }
   // weź pasażera i zawieź go na miejsce, ustaw czas
   makeRide(ride) {
-    this.time += this.stepsTo(ride.a, ride.b) + ride.distance;
+    this.time += this.stepsTo(ride.a, ride.b);
+    //console.log(this.time, ride.ear)
+    if (this.time <= ride.ear) {
+      //console.log('bonus')
+      this.points += B;
+    }
+    this.time += ride.distance;
+    this.points += ride.distance;
     this.x = ride.x;
     this.y = ride.y;
     this.rides.push(ride.id)
@@ -83,6 +91,7 @@ for (let i = 0; i < N; i++) {
 
 console.log(rides)
 while(rides.length !== 0) {
+  //console.log(rides.length)
   rides.sort((a, b) => {
     return a.ear > b.ear;
   })
@@ -90,14 +99,17 @@ while(rides.length !== 0) {
     if (rides.length === 0) {
       return;
     }
-    if (veh.time <= veh.stepsTo(rides[0].a, rides[0].b)) {
+    if (veh.time <= rides[0].last + veh.stepsTo(rides[0].a, rides[0].b)) {
       veh.makeRide(rides[0]);
       rides.splice(0, 1);
     }
   })
 }
 
+let points = 0;
 vehicles.forEach(veh => {
-  console.log(veh)
-  //console.log(veh.toString())
+  points += parseInt(veh.points);
+  //console.log(veh)
+  console.log(veh.toString())
 })
+console.log('points', points)
