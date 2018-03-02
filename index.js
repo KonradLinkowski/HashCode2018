@@ -32,7 +32,7 @@ class Vehicle {
   makeRide(ride) {
     this.time += this.stepsTo(ride.a, ride.b);
     //console.log(this.time, ride.ear)
-    if (this.time <= ride.ear) {
+    if (this.time < ride.ear) {
       //console.log('bonus', ride.id)
       bonus++;
       this.points += B;
@@ -90,7 +90,7 @@ for (let i = 0; i < N; i++) {
   rides.push(new Ride(i, data[i + 1][0], data[i + 1][1], data[i + 1][2], data[i + 1][3], data[i + 1][4], data[i + 1][5]))
 }
 
-console.log(rides)
+//console.log(rides)
 let tempLength;
 while(rides.length !== 0) {
   //console.log(rides.length)
@@ -117,14 +117,14 @@ vehicles.forEach(veh => {
 })
 console.log(output)
 console.log('points', points)
-console.log('nonnnnn', bonus)
-fs.writeFileSync('e.out', output);
+console.log('bonus bgc', bonus)
+//fs.writeFileSync('e.out', output);
 
 function calc(array, veh) {
   let best = 0 //array[0].distance / (array[0].distance + veh.stepsTo(array[0].a, array[0].b));
   let index = null;
   for (let i = 0; i < array.length; i++) {
-    if (veh.time > rides[i].last + veh.stepsTo(rides[i].x, rides[i].y)) {
+    if (veh.time >= rides[i].last + veh.stepsTo(rides[i].x, rides[i].y)) {
       continue
     }
     let temp = array[i].distance / (array[i].distance + veh.stepsTo(array[i].x, array[i].y));
