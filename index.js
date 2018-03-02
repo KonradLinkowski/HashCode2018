@@ -1,3 +1,5 @@
+"use strict"
+
 // file system module
 const fs = require('fs');
 
@@ -9,24 +11,25 @@ const paths = {
   },
   b: {
     in: 'b_should_be_easy.in',
-    out: 'a.out'
+    out: 'b.out'
   },
   c: {
     in: 'c_no_hurry.in',
-    out: 'a.out'
+    out: 'c.out'
   },
   d: {
     in: 'd_metropolis.in',
-    out: 'a.out'
+    out: 'd.out'
   },
   e: {
     in: 'e_high_bonus.in',
-    out: 'a.out'
+    out: 'e.out'
   }
 }
 
 // get dataset from console, default dataset a
-currentPath = process.argv.length > 2 ? paths[process.argv[2]] : paths.a;
+let currentPath = process.argv.length > 2 ? paths[process.argv[2]] : paths.a;
+let shoudBeSaved = process.argv.length > 3 ? true: false;
 
 class Vehicle {
   // x - row, y - column, time - current time step
@@ -186,4 +189,6 @@ vehicles.forEach(veh => {
 console.log(output)
 console.log('points', points)
 console.log('bonus bgc', bonus)
-//fs.writeFileSync(currentPath.out, output);
+if (shoudBeSaved) {
+  fs.writeFileSync(currentPath.out, output);
+}
