@@ -69,6 +69,27 @@ class Vehicle {
     this.y = ride.y;
     this.rides.push(ride.id)
   }
+  // calculates best ride for this vehicle
+  calc(rides) {
+    let best = 0 //rides[0].distance / (rides[0].distance + this.stepsTo(rides[0].a, rides[0].b));
+    let index = null;
+    for (let i = 0; i < rides.length; i++) {
+      // if vehicle can't take a ride skip
+      if (this.time >= rides[i].last + this.stepsTo(rides[i].x, rides[i].y)) {
+        continue
+      }
+      // calculate ride's profitability
+      let temp = rides[i].distance / (rides[i].distance + this.stepsTo(rides[i].x, rides[i].y));
+      //console.log(this, i, temp, best)
+      if (temp > best) {
+        //console.log('przepis')
+        best = temp;
+        index = i;
+      }
+    }
+    //console.log('index', index)
+    return index;
+  }
   // final output format
   toString() {
     let out = [this.rides.length.toString()];
@@ -143,7 +164,7 @@ while(rides.length !== 0) {
       return;
     }
     // calculate best ride for this vehicle
-    let index = calc(rides, veh)
+    let index = veh.calc(rides, veh)
     if (index !== null) {
       veh.makeRide(rides[index]);
       rides.splice(index, 1);
@@ -166,25 +187,3 @@ console.log(output)
 console.log('points', points)
 console.log('bonus bgc', bonus)
 //fs.writeFileSync(currentPath.out, output);
-
-// calculates best ride for given vehicle
-function calc(array, veh) {
-  let best = 0 //array[0].distance / (array[0].distance + veh.stepsTo(array[0].a, array[0].b));
-  let index = null;
-  for (let i = 0; i < array.length; i++) {
-    // if vehicle can't take a ride skip
-    if (veh.time >= rides[i].last + veh.stepsTo(rides[i].x, rides[i].y)) {
-      continue
-    }
-    // calculate ride's profitability
-    let temp = array[i].distance / (array[i].distance + veh.stepsTo(array[i].x, array[i].y));
-    //console.log(veh, i, temp, best)
-    if (temp > best) {
-      //console.log('przepis')
-      best = temp;
-      index = i;
-    }
-  }
-  //console.log('index', index)
-  return index;
-}
