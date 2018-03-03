@@ -46,9 +46,9 @@ class Vehicle {
   }
   // go to a and b and set the time
   goto(a, b) {
+    this.time += this.stepsTo(a, b);
     this.x = a;
     this.y = b;
-    this.time += this.stepsTo(a, b);
   }
   // go to the final coordinates of ride and calculate the time step
   makeRide(ride) {
@@ -60,13 +60,19 @@ class Vehicle {
       //console.log('bonus', ride.id)
       bonus++;
       this.points += B;
+      this.time = ride.ear
     }
     // set time to the end of this ride
     this.time += ride.distance;
+    let bonusbgc = false;
     // check if points can be added
     if (this.time <= ride.last) {
       // add points equal distance of this ride
       this.points += ride.distance;
+      bonusbgc = true;
+    }
+    if (!bonusbgc) {
+      console.log('no points')
     }
     this.x = ride.x;
     this.y = ride.y;
@@ -78,11 +84,11 @@ class Vehicle {
     let index = null;
     for (let i = 0; i < rides.length; i++) {
       // if vehicle can't take a ride skip
-      if (this.time >= rides[i].last + this.stepsTo(rides[i].x, rides[i].y)) {
+      if (this.time + rides[i].distance + this.stepsTo(rides[i].x, rides[i].y) > rides[i].last) {
         continue
       }
       // calculate ride's profitability
-      let temp = rides[i].distance / (rides[i].distance + this.stepsTo(rides[i].x, rides[i].y));
+      let temp = rides[i].distance / (clamp(rides[i].ear - this.time, 0, 10) + rides[i].distance + this.stepsTo(rides[i].a, rides[i].b));
       //console.log(this, i, temp, best)
       if (temp > best) {
         //console.log('przepis')
@@ -90,7 +96,6 @@ class Vehicle {
         index = i;
       }
     }
-    //console.log('index', index)
     return index;
   }
   // final output format
@@ -186,9 +191,13 @@ vehicles.forEach(veh => {
   points += parseInt(veh.points);
   output += veh.toString() + '\n'
 })
-console.log(output)
+// console.log(output)
 console.log('points', points)
 console.log('bonus bgc', bonus)
 if (shoudBeSaved) {
   fs.writeFileSync(currentPath.out, output);
+}
+
+function clamp(number, min, max) {
+  return Math.max(min, Math.min(number, max));
 }
