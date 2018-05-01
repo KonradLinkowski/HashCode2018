@@ -84,7 +84,9 @@ class Vehicle {
     let index = null;
     for (let i = 0; i < rides.length; i++) {
       // if vehicle can't take a ride skip
-      if (this.time + rides[i].distance + this.stepsTo(rides[i].x, rides[i].y) > rides[i].last) {
+      //console.log('time: ', this.time, 'distance: ', this.stepsTo(rides[i].x, rides[i].y), 'length: ', rides[i].distance, 'finish: ', rides[i].last)
+      if (this.time + this.stepsTo(rides[i].x, rides[i].y) + rides[i].distance >= rides[i].last) {
+        //console.log('continue')
         continue
       }
       // calculate ride's profitability
